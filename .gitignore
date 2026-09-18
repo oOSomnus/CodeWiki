@@ -46,6 +46,9 @@ tests/*
 !tests/test_leaf_selection.py
 !tests/test_artifact_analyzer.py
 !tests/test_scala_analyzer.py
+!tests/test_go_analyzer.py
+!tests/test_rust_analyzer.py
+!tests/test_language_registration.py
 
 # Jupyter
 *.ipynb

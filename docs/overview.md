@@ -30,7 +30,7 @@ flowchart TB
     subgraph Analysis["Dependency Analysis Pipeline"]
         DAC["Dependency_Analyzer_Core\n(DependencyParser, DependencyGraphBuilder,\nNode/CallRelationship models)"]
         DAS["Dependency_Analysis_Service\n(AnalysisService, RepoAnalyzer, CallGraphAnalyzer)"]
-        LANG["Language_Analyzers\n(Python, JS/TS, C-family, PHP)"]
+        LANG["Language_Analyzers\n(Python, JS/TS, C-family, PHP, Ruby, Scala, Go, Rust)"]
     end
 
     subgraph Docs["Backend_LLM_&_Documentation_Services"]
@@ -105,7 +105,7 @@ The LLM-free static-analysis front half: turns a source repository into a fully-
 |---|---|
 | [Dependency_Analyzer_Core](Dependency_Analyzer_Core.md) | Shared data models (`Node`, `CallRelationship`, `Repository`, `AnalysisResult`) and the graph-building/leaf-selection logic. |
 | [Dependency_Analysis_Service](Dependency_Analysis_Service.md) | Orchestrates repository cloning/discovery, per-language call-graph construction, and cross-file symbol resolution. |
-| [Language_Analyzers](Language_Analyzers.md) | Per-language static analyzers (Python AST, tree-sitter for JS/TS, C-family, PHP) extracting components and relationships. |
+| [Language_Analyzers](Language_Analyzers.md) | Per-language static analyzers (Python AST and tree-sitter for JS/TS, C-family, PHP, Ruby, Scala, Go and Rust) extracting components and relationships. |
 
 ### [Documentation_Generation_Engine](Documentation_Generation_Engine.md)
 

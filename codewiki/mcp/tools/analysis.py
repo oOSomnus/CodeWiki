@@ -228,6 +228,8 @@ def _detect_via_mtime(
         ".rb",
         ".scala",
         ".sc",
+        ".go",
+        ".rs",
     }
 
     changed: list[str] = []

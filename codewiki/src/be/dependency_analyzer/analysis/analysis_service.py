@@ -377,6 +377,8 @@ class AnalysisService:
             "ruby",
             "kotlin",
             "scala",
+            "go",
+            "rust",
         ]
 
     def _cleanup_repository(self, temp_dir: str):

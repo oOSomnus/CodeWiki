@@ -110,7 +110,7 @@ Central façade exposing three analysis modes:
 Internally it composes a `RepoAnalyzer` (structure) and a `CallGraphAnalyzer` (call graph), and delegates
 repository acquisition to `cloning.py` helpers (`clone_repository`, `cleanup_repository`, `parse_github_url`).
 It also filters files down to the set of currently supported languages (Python, JavaScript, TypeScript, Java,
-C#, C, C++, PHP, Kotlin) before invoking the call-graph analyzer.
+C#, C, C++, PHP, Ruby, Kotlin, Scala, Go, Rust) before invoking the call-graph analyzer.
 
 Two module-level functions, `analyze_repository` and `analyze_repository_structure_only`, are kept as
 backward-compatible wrappers around a freshly constructed `AnalysisService`.
@@ -179,7 +179,7 @@ The multi-language orchestrator. Given a list of code files (already filtered to
    delegating to the implementations documented in [Language_Analyzers](Language_Analyzers.md):
    - `python` → `analyzers/python.py::analyze_python_file`
    - `javascript` / `typescript` → tree-sitter analyzers in `analyzers/javascript.py` / `typescript.py`
-   - `java`, `kotlin`, `csharp`, `c`, `cpp`, `php` → respective tree-sitter analyzers
+   - `java`, `kotlin`, `csharp`, `c`, `cpp`, `php`, `ruby`, `scala`, `go`, `rust` → respective tree-sitter analyzers
    Each file is analyzed under a 30-second timeout guard (`timeout` context manager, POSIX `SIGALRM`-based,
    no-op on Windows) so a pathological file cannot stall the whole run.
 4. **Resolves call relationships** (`_resolve_call_relationships`): builds global and per-language exact/

@@ -255,6 +255,10 @@ class CallGraphAnalyzer:
                     self._analyze_ruby_file(file_path, content, repo_dir)
                 elif language == "scala":
                     self._analyze_scala_file(file_path, content, repo_dir)
+                elif language == "go":
+                    self._analyze_go_file(file_path, content, repo_dir)
+                elif language == "rust":
+                    self._analyze_rust_file(file_path, content, repo_dir)
                 # else:
                 #     logger.warning(
                 #         f"Unsupported language for call graph analysis: {language} for file {file_path}"
@@ -531,6 +535,32 @@ class CallGraphAnalyzer:
             self.call_relationships.extend(relationships)
         except Exception:
             logger.exception(f"Failed to analyze Scala file {file_path}")
+
+    def _analyze_go_file(self, file_path: str, content: str, repo_dir: str):
+        """Analyze a Go file using the tree-sitter Go adapter."""
+        from codewiki.src.be.dependency_analyzer.analyzers.go import analyze_go_file
+
+        try:
+            functions, relationships = analyze_go_file(file_path, content, repo_path=repo_dir)
+            for func in functions:
+                func_id = func.id if func.id else f"{file_path}:{func.name}"
+                self.functions[func_id] = func
+            self.call_relationships.extend(relationships)
+        except Exception:
+            logger.exception(f"Failed to analyze Go file {file_path}")
+
+    def _analyze_rust_file(self, file_path: str, content: str, repo_dir: str):
+        """Analyze a Rust file using the tree-sitter Rust adapter."""
+        from codewiki.src.be.dependency_analyzer.analyzers.rust import analyze_rust_file
+
+        try:
+            functions, relationships = analyze_rust_file(file_path, content, repo_path=repo_dir)
+            for func in functions:
+                func_id = func.id if func.id else f"{file_path}:{func.name}"
+                self.functions[func_id] = func
+            self.call_relationships.extend(relationships)
+        except Exception:
+            logger.exception(f"Failed to analyze Rust file {file_path}")
 
     def _resolve_call_relationships(self):
         """
@@ -830,6 +860,10 @@ class CallGraphAnalyzer:
                 node_classes.append("lang-ruby")
             elif file_ext in [".scala", ".sc"]:
                 node_classes.append("lang-scala")
+            elif file_ext == ".go":
+                node_classes.append("lang-go")
+            elif file_ext == ".rs":
+                node_classes.append("lang-rust")
 
             cytoscape_elements.append(
                 {

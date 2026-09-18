@@ -167,6 +167,8 @@ def detect_supported_languages(directory: Path) -> list[tuple[str, int]]:
         "Kotlin": [".kt", ".kts"],
         "Ruby": [".rb"],
         "Scala": [".scala", ".sc"],
+        "Go": [".go"],
+        "Rust": [".rs"],
     }
 
     # Directories to exclude from counting

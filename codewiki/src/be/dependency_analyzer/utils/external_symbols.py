@@ -491,6 +491,162 @@ JS_TS_GLOBAL_OBJECTS = {
     "exports",
 }
 
+
+# Go standard-library package roots.  Calls are represented as ``pkg.Name``
+# by the Go adapter, so package-root matching removes standard-library noise
+# without suppressing an unrelated project function with the same simple name.
+GO_STANDARD_PACKAGES = {
+    "archive",
+    "bufio",
+    "bytes",
+    "cmp",
+    "compress",
+    "context",
+    "crypto",
+    "database",
+    "debug",
+    "embed",
+    "encoding",
+    "errors",
+    "expvar",
+    "flag",
+    "fmt",
+    "go",
+    "hash",
+    "html",
+    "image",
+    "index",
+    "io",
+    "log",
+    "math",
+    "mime",
+    "net",
+    "os",
+    "path",
+    "plugin",
+    "reflect",
+    "regexp",
+    "runtime",
+    "slices",
+    "sort",
+    "strconv",
+    "strings",
+    "sync",
+    "syscall",
+    "testing",
+    "text",
+    "time",
+    "unicode",
+    "unsafe",
+}
+
+GO_BUILTINS = {
+    "append",
+    "cap",
+    "clear",
+    "close",
+    "complex",
+    "copy",
+    "delete",
+    "imag",
+    "len",
+    "make",
+    "max",
+    "min",
+    "new",
+    "panic",
+    "print",
+    "println",
+    "recover",
+    "real",
+}
+
+
+# Rust names that are language/runtime facilities rather than repository
+# components.  Namespaced std/core/alloc paths are handled by prefix below;
+# this set covers prelude types and the common built-in macros.
+RUST_EXTERNAL_SYMBOLS = {
+    "Arc",
+    "AsMut",
+    "AsRef",
+    "BTreeMap",
+    "BTreeSet",
+    "Box",
+    "BufRead",
+    "BufReader",
+    "BufWriter",
+    "Copy",
+    "Debug",
+    "Default",
+    "Display",
+    "Drop",
+    "Error",
+    "Eq",
+    "File",
+    "Fn",
+    "FnMut",
+    "FnOnce",
+    "From",
+    "FromIterator",
+    "HashMap",
+    "HashSet",
+    "Into",
+    "IntoIterator",
+    "Iterator",
+    "Mutex",
+    "Ordering",
+    "Ord",
+    "PartialEq",
+    "PartialOrd",
+    "Path",
+    "PathBuf",
+    "Read",
+    "Rc",
+    "RwLock",
+    "Send",
+    "Sync",
+    "ToOwned",
+    "ToString",
+    "TryFrom",
+    "TryInto",
+    "Vec",
+    "VecDeque",
+    "Write",
+    "alloc",
+    "assert",
+    "assert_eq",
+    "assert_ne",
+    "cfg",
+    "clone",
+    "concat",
+    "dbg",
+    "debug_assert",
+    "debug_assert_eq",
+    "debug_assert_ne",
+    "env",
+    "eprintln",
+    "file",
+    "format",
+    "include",
+    "include_bytes",
+    "include_str",
+    "matches",
+    "Option",
+    "Ok",
+    "panic",
+    "print",
+    "println",
+    "Result",
+    "Some",
+    "String",
+    "todo",
+    "unimplemented",
+    "unreachable",
+    "vec",
+    "write",
+    "writeln",
+}
+
 JS_TS_GLOBAL_FUNCTIONS = {
     "parseInt",
     "parseFloat",
@@ -712,6 +868,16 @@ def is_external_symbol(language: str | None, symbol: str) -> bool:
             tail = symbol.rsplit(".", 1)[-1]
             return head in JS_TS_GLOBAL_OBJECTS or tail in JS_TS_PROTOTYPE_METHODS
         return symbol in JS_TS_GLOBAL_FUNCTIONS or symbol in JS_TS_GLOBAL_OBJECTS
+
+    if language == "go":
+        if "." in symbol:
+            return symbol.split(".", 1)[0] in GO_STANDARD_PACKAGES
+        return symbol in GO_BUILTINS
+
+    if language == "rust":
+        if symbol.startswith(("std.", "std::", "core.", "core::", "alloc.", "alloc::")):
+            return True
+        return normalize_symbol(symbol) in RUST_EXTERNAL_SYMBOLS
 
     normalized = normalize_symbol(symbol)
     if language == "cpp":

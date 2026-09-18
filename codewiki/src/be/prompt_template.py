@@ -356,6 +356,8 @@ EXTENSION_TO_LANGUAGE = {
     ".phtml": "php",
     ".inc": "php",
     ".rb": "ruby",
+    ".go": "go",
+    ".rs": "rust",
 }
 
 

@@ -16,6 +16,8 @@ Currently supported languages/analyzers:
 | C, C++, C#, Java, Kotlin | `TreeSitterCAnalyzer`, `TreeSitterCppAnalyzer`, `TreeSitterCSharpAnalyzer`, `TreeSitterJavaAnalyzer`, `TreeSitterKotlinAnalyzer` | tree-sitter |
 | JavaScript, TypeScript | `TreeSitterJSAnalyzer`, `TreeSitterTSAnalyzer` | tree-sitter |
 | PHP | `TreeSitterPHPAnalyzer` (+ `NamespaceResolver`) | tree-sitter |
+| Go | `TreeSitterGoAnalyzer` | tree-sitter-language-pack |
+| Rust | `TreeSitterRustAnalyzer` | tree-sitter-language-pack |
 | Python | `PythonASTAnalyzer` | native `ast` |
 
 ## Architecture
@@ -29,10 +31,12 @@ graph TD
     CGA -->|routes by file extension| CFAM["C-Family Tree-sitter Analyzers<br/>(C, C++, C#, Java, Kotlin)"]
     CGA -->|routes by file extension| JSTS["JavaScript & TypeScript Analyzers"]
     CGA -->|routes by file extension| PHP["PHP Analyzer"]
+    CGA -->|routes by file extension| GR["Go / Rust Tree-sitter Analyzers"]
     CGA -->|routes by file extension| PY["Python Analyzer"]
     CFAM -->|Node + CallRelationship lists| CGA
     JSTS -->|Node + CallRelationship lists| CGA
     PHP -->|Node + CallRelationship lists| CGA
+    GR -->|Node + CallRelationship lists| CGA
     PY -->|Node + CallRelationship lists + external roots| CGA
     CGA -->|cross-file resolution + external filtering| DP["DependencyParser"]
     DP --> DGB["DependencyGraphBuilder"]
@@ -108,10 +112,11 @@ flowchart LR
         CF["C-Family Analyzers"]
         JT["JS/TS Analyzers"]
         PH["PHP Analyzer"]
+        GR["Go/Rust Analyzers"]
         PY["Python Analyzer"]
     end
-    CF & JT & PH & PY --> Funcs["Nodes"]
-    CF & JT & PH & PY --> Rels["CallRelationships"]
+    CF & JT & PH & GR & PY --> Funcs["Nodes"]
+    CF & JT & PH & GR & PY --> Rels["CallRelationships"]
     Funcs --> Resolve["CallGraphAnalyzer._resolve_call_relationships"]
     Rels --> Resolve
     Resolve --> Filter["_is_external_callee<br/>(drops stdlib/third-party edges)"]
@@ -128,6 +133,7 @@ flowchart LR
 | **C-Family Tree-sitter Analyzers** | C, C++, C#, Java, Kotlin | `TreeSitterCAnalyzer`, `TreeSitterCppAnalyzer`, `TreeSitterCSharpAnalyzer`, `TreeSitterJavaAnalyzer`, `TreeSitterKotlinAnalyzer` | [C-Family_Tree-sitter_Analyzers.md](C-Family_Tree-sitter_Analyzers.md) |
 | **JavaScript & TypeScript Analyzers** | JavaScript, TypeScript | `TreeSitterJSAnalyzer`, `TreeSitterTSAnalyzer` | [JavaScript_TypeScript_Analyzers.md](JavaScript_TypeScript_Analyzers.md) |
 | **PHP Analyzer** | PHP | `TreeSitterPHPAnalyzer`, `NamespaceResolver` | [PHP_Analyzer.md](PHP_Analyzer.md) |
+| **Go/Rust Analyzers** | Go, Rust | `TreeSitterGoAnalyzer`, `TreeSitterRustAnalyzer` | tree-sitter-language-pack |
 | **Python Analyzer** | Python | `PythonASTAnalyzer` | [Python_Analyzer.md](Python_Analyzer.md) |
 
 ## Related Modules
